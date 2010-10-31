@@ -1,0 +1,15 @@
+This script is a quick and easy way to toggle my touchpad on and off.  I tried 
+g pointing devices, but that doesn't seem to consistently work.  It'll stay on for a while and then the trackpad will turn back on.  I'm hoping to do the following:
+
+* Set up my .xinitrc to disable the xinput by default (xinput set-prop "SynPS/2 Synaptics TouchPad" 125 0)
+* Map this script to my GNOME task bar as an application or something similar so I can toggle it when I do want to use the trackpad. 
+  - sudo cp toggleTouchpad.pl /usr/bin/
+  - sudo chmod 755 /usr/bin/toggleTouchpad.pl
+  - Use custom application Launch
+w
+
+Were I really clever I'd get the desktop icon to change depending on the state.
+
+TODOS:
+
+Create an installer, .desktop file, icons, etc.  See if can enable/disable the scrollbar part of the trackpad but disable rest.
