@@ -16,6 +16,9 @@ my @props = @lines[1..scalar(@lines) - 1];
 
 
 my %props = ();
+
+my %displayToNumeric = ();
+
 my $count = 0;
 foreach my $propLine (@props) {
 
@@ -28,22 +31,26 @@ foreach my $propLine (@props) {
     $propLine =~ /\t*(.+) \((\d+)\):\s*(.*)$/;
     
 
-
+# Device Enabled 
+    
     ($displayName,$numericId,$value) = ($1,$2,$3);
 
     $props{$displayName} = $value;
     $props{$numericId} = $value;
 
+    $displayToNumeric{ $displayName } = $numericId ;
+    
+    
     $count++;
 }
 
-#print Dumper(\%props);
+print Dumper(\%props);
 
-if($props{125} == 0) {
-    system("xinput set-prop 'SynPS/2 Synaptics TouchPad' 125 1");
+if($props{'Device Enabled'} == 0) {
+    system("xinput set-prop 'SynPS/2 Synaptics TouchPad' " . $displayToNumeric{'Device Enabled'}  . ' 1');
 }
 else {
-    system("xinput set-prop 'SynPS/2 Synaptics TouchPad' 125 0");
+    system("xinput set-prop 'SynPS/2 Synaptics TouchPad' " . $displayToNumeric{'Device Enabled'} . ' 0');
 }
 
 sub trim {
