@@ -4,6 +4,16 @@ use strict;
 
 use Data::Dumper;
 
+# adding "on | off" as arguments that will toggle to that state regardless
+# of current state
+
+my $state;
+#wonder if can ssume this means ARGV[0] defined
+if(@ARGV) {
+    $state = lc($ARGV[0]) eq 'on'  ? 1 :
+             lc($ARGV[0]) eq 'off' ? 0 :
+ undef ;
+}
 
 my $results = `xinput list-props "SynPS/2 Synaptics TouchPad"`;
 #could I do this more efficiently?   
@@ -44,13 +54,14 @@ foreach my $propLine (@props) {
     $count++;
 }
 
-print Dumper(\%props);
+#print Dumper(\%props);
 
-if($props{'Device Enabled'} == 0) {
-    system("xinput set-prop 'SynPS/2 Synaptics TouchPad' " . $displayToNumeric{'Device Enabled'}  . ' 1');
+if(   ( defined($state)  && $state == 1)
+   || ( !defined($state) && $props{'Device Enabled'} == 0) ) {
+    setPropertyState($displayToNumeric{'Device Enabled'}, 1);
 }
 else {
-    system("xinput set-prop 'SynPS/2 Synaptics TouchPad' " . $displayToNumeric{'Device Enabled'} . ' 0');
+    setPropertyState($displayToNumeric{'Device Enabled'}, 0);
 }
 
 sub trim {
@@ -62,4 +73,12 @@ sub trim {
 
     return $value;
 
+}
+
+sub setPropertyState {
+
+    my $setting = shift;
+    my $value   = shift;
+
+    system("xinput set-prop 'SynPS/2 Synaptics TouchPad' $setting $value") ;
 }
